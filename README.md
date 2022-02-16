@@ -1,9 +1,18 @@
 # CUDA Kernels
-A collection of custom CUDA kernels.
 
---- 
+## f32_reduce
 
-## CorrelationMask
+### Kernel Description
+
+Performs a summation reduction on a vector of 32-bit floats. 
+
+### Thread Layout
+
+Each thread block is responsible for computing a partial sum of the input vector. All of the benefits of GPU parallelization are hidden in this case due to cumbersome memory transfers. As such, the summation should be used primarily as a device function.
+
+---
+
+## correlation_mask
 
 ### Kernel Description
 
