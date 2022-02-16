@@ -17,36 +17,34 @@ mod = SourceModule(
   """
   __device__
   float Rho(const unsigned int nrow, const float sum_X, const float sum_Y,
-                const float sum_XY, const float squareSum_X, const float squareSum_Y)
-  {
+                const float sum_XY, const float squareSum_X, const float squareSum_Y) {
     return (nrow*sum_XY - sum_X*sum_Y ) /
            sqrtf( (nrow*squareSum_X - sum_X*sum_X) * (nrow*squareSum_Y - sum_Y*sum_Y) );
   }
 
   __global__
-  void GetCorrFlag(float* mat, float* targ, unsigned int* out, const unsigned int nrow,  
-                const unsigned int ncol, const float sum_Y, const float squareSum_Y,
-                const float low, const float high)
-  {
-      unsigned int j = (blockIdx.x * blockDim.x) + threadIdx.x;
-      const unsigned int s_x = blockDim.x * gridDim.x;
+  void GetCorrFlag(float* mat, float* targ, unsigned* out, const unsigned nrow,  
+                const unsigned ncol, const float sum_Y, const float squareSum_Y,
+                const float low, const float high) {
+      
+      unsigned j = (blockIdx.x * blockDim.x) + threadIdx.x;
+      const unsigned s_x = blockDim.x * gridDim.x;
       float sum_X, squareSum_X, sum_XY, tmp;
       
-      while (j < ncol)
-      {
-          sum_X = 0; squareSum_X = 0; sum_XY = 0;
-          for (size_t i = 0; i < nrow; i++)  
-          {
+      while (j < ncol) {
+      
+          sum_X = 0.0F; squareSum_X = 0.0F; sum_XY = 0.0F;
+          
+          for (size_t i = 0; i < nrow; i++) {
               tmp = *(mat + (i*ncol) + j);
               sum_X += tmp;
               squareSum_X += tmp * tmp;
               sum_XY += tmp * targ[i];
           }
+          
           float rho = Rho(nrow, sum_X, sum_Y, sum_XY, squareSum_X, squareSum_Y);
-          if (rho > low && rho < high)
-          { out[j] = 1; } 
-          else
-          { out[j] = 0; }
+          if (rho > low && rho < high) out[j] = 1;  
+          else out[j] = 0; 
           j += s_x;
       }
   }
