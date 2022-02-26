@@ -1,5 +1,17 @@
 # CUDA Kernels
 
+## curve_length
+
+### Kernel Description
+
+A definition of the *curve length* algorithm can be found [here](https://lcp.mit.edu/pdf/Zong06.pdf).
+
+### Thread Layout
+
+The primary input for this kernel is an `n` by `p` matrix where `n` represents the number of signals and `p` represents the length of each signal. Each thread block is responsible for computing the curve length of at least 1 signal (> 1 if the number of signals exceed 65 000). As such, the kernel returns a vector of size `n` of curve lengths.
+
+---
+
 ## f32_reduce
 
 ### Kernel Description
