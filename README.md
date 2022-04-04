@@ -1,5 +1,17 @@
 # CUDA Kernels
 
+## async_image_normalize
+
+### Kernel Description
+
+Normalize images (in this simplified case a 1-D representation of a 2-D image) to values between 0 and 1.
+
+### Program Workflow
+
+The image is first written into a host staging area that consists of WriteCombined memory. From there, it is asynchronously copied to the device staging area, normalized, and then asynchronously sent back to the host. The particular event-based, across-stream synchronization scheme that I have employed is very heavy, so the images need to be relatively large for it to perform well. As such, this program reinforces the notion that memory usage and program workflow often should be organized so as to minimize necessary host-device synchronization.
+
+---
+
 ## curve_length
 
 ### Kernel Description
