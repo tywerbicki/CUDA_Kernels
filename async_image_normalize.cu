@@ -7,8 +7,6 @@
 
 #define STAGING_SIZE 2000000000
 
-//#define NDEBUG
-
 template<unsigned warps_per_block>
 __global__ void image_minmax_cu(const float* m, const unsigned size, float* out) {
     
